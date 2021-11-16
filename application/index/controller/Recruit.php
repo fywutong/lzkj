@@ -3,7 +3,7 @@
 namespace app\index\controller;
 
 use app\model\Recruit as RecruitModel;
-use app\model\User;
+use app\model\Applyrecruit;
 use Exception;
 use think\Controller;
 
@@ -190,12 +190,32 @@ class Recruit extends Controller
     //供应商申请应募
     public function applyrecruit()
     {
+        $Applyrecruit = new Applyrecruit();
         try {
+            $token = input('token');
+            $returntoken = checkToken($token);
             $data = input();
-            $add = db('applyrecruit')->insert($data);
+            if (empty($token)) {
+                $arr = ['msg' => 'token不能为空', 'error' => 1];
+            }else if ($returntoken['code'] == 200) {
+                //判断是否为供应商
+                $return = gongyinglogin($returntoken['data']['type']);
+                if ($return['error'] == 1) {
+                    return json($return);
+                }
+                $userid = $returntoken['data']['userid'];
+                $data['supplyid'] = $userid;
+                $add =  $Applyrecruit->save($data);
+                if ($add) {
+                    $arr = ['msg' => '应募成功', 'error' => 0];
+                } else {
+                    $arr = ['msg' => '应募失败，异常错误', 'error' => 1];
+                }
+            }
         } catch (Exception $e) {
             $arr = ['msg' => '必填项不能为空', 'catch' => $e->getMessage(), 'error' => 1];
         }
+        return json($arr);
     }
-    //http://lzjh.com/Index/recruit/recruitadd?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MzYzNDAzMDUsIm5iZiI6MTYzNTczNTUwNSwiaWF0IjoxNjM1NzM1NTA1LCJ1c2VyaWQiOjMsInR5cGUiOiIxIiwidXNlcm5hbWUiOiIxMzg0MDQ2MzI4NSJ9.zO3RH5roWBRcELR0-HF5YdKHeYdZCflSt4_8Ts-On0s&type=1&name=测试招募名称&company=测试招募单位&time=2021-11-12&pid=4&itype=1&payment=微信&address=辽宁省沈阳市&qualifications=服务资质&remarks=补充说明
+    //http://lzjh.com/Index/recruit/applyrecruit?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Mzc2Njk2MzksIm5iZiI6MTYzNzA2NDgzOSwiaWF0IjoxNjM3MDY0ODM5LCJ1c2VyaWQiOjEsInR5cGUiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiJ9.k8SJUyovJs-qY6X1OX-_8yLmWY4HmvAUQMIqA1jpYHs&recruitid=4&cname=测试供应商公司名称&name=联系人&tel=13888888888&address=辽宁省沈阳市&type=测试品类
 }

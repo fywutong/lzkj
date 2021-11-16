@@ -92,6 +92,20 @@ function judgelogin($type)
 {
     try {
         if ($type != 2) {
+            throw new Exception('此账号不是采购商账号');
+        }
+        $arr = ['msg' => '成功', 'error' => 0];
+    }catch(Exception $e)
+    {
+        $arr = ['msg' => $e->getMessage(), 'error' => 1];
+    }
+    return $arr;
+}
+//判断是否是采购商
+function gongyinglogin($type)
+{
+    try {
+        if ($type != 1) {
             throw new Exception('此账号不是供应商账号');
         }
         $arr = ['msg' => '成功', 'error' => 0];
@@ -101,4 +115,3 @@ function judgelogin($type)
     }
     return $arr;
 }
-
