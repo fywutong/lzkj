@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2021-11-16 16:23:55
+-- 生成日期： 2021-11-16 22:00:33
 -- 服务器版本： 5.7.26
 -- PHP 版本： 7.3.4
 
@@ -31,8 +31,21 @@ SET time_zone = "+00:00";
 CREATE TABLE `lzjh_applyrecruit` (
   `id` int(11) NOT NULL,
   `recruitid` int(11) NOT NULL COMMENT '招募id',
-  `supply` int(11) NOT NULL COMMENT '供应商id'
+  `supplyid` int(11) NOT NULL COMMENT '供应商id',
+  `cname` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '公司名称',
+  `name` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT '联系人',
+  `tel` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '联系电话',
+  `address` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '服务区域',
+  `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '应募品类',
+  `state` int(11) NOT NULL DEFAULT '1' COMMENT '应募状态 1是待确认 2是已成功 3是失败'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='申请招募';
+
+--
+-- 转存表中的数据 `lzjh_applyrecruit`
+--
+
+INSERT INTO `lzjh_applyrecruit` (`id`, `recruitid`, `supplyid`, `cname`, `name`, `tel`, `address`, `type`, `state`) VALUES
+(1, 4, 1, '测试供应商公司名称', '联系人', '13888888888', '辽宁省沈阳市', '测试品类', 1);
 
 -- --------------------------------------------------------
 
@@ -246,8 +259,8 @@ CREATE TABLE `lzjh_user` (
 --
 
 INSERT INTO `lzjh_user` (`id`, `username`, `password`, `cname`, `name`, `recommender`, `mgroup`, `address`, `post`, `type`) VALUES
-(1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', '', '', '', NULL, NULL, '', 1),
-(3, '13840463285', 'e10adc3949ba59abbe56e057f20f883e', '浙江网盛生意宝', '李先生', '王先生', NULL, NULL, NULL, 2),
+(1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', '', '供应商', '', NULL, NULL, '', 1),
+(3, '13840463285', 'e10adc3949ba59abbe56e057f20f883e', '浙江网盛生意宝', '李先生 采购商 发标书的', '王先生', NULL, NULL, NULL, 2),
 (4, '13844444444', 'e10adc3949ba59abbe56e057f20f883e', '浙江网盛生意宝', '吴先生', '王先生', NULL, NULL, NULL, 1);
 
 --
@@ -304,7 +317,7 @@ ALTER TABLE `lzjh_user`
 -- 使用表AUTO_INCREMENT `lzjh_applyrecruit`
 --
 ALTER TABLE `lzjh_applyrecruit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `lzjh_bidcreate`
