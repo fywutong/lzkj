@@ -56,10 +56,10 @@ class Recruit extends Controller
                 ->withAttr('category', function ($value) {
                     return json_decode($value, true);
                 })->page($page, $number)->select();
-                $count=count($project_list);
-                $project_list['count']=$count;
-                $project_list['page']=$page;
-                $project_list['number']=$number;
+            $count = count($project_list);
+            $project_list['count'] = $count;
+            $project_list['page'] = $page;
+            $project_list['number'] = $number;
             $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
         } else {
             $arr = ['msg' => $returntoken['msg'], 'error' => 1];
@@ -104,11 +104,11 @@ class Recruit extends Controller
     public function recruitcheck()
     {
         try {
-          $id=input('id');
-          $project_list = RecruitModel::get($id);
-          $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
+            $id = input('id');
+            $project_list = RecruitModel::get($id);
+            $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
         } catch (Exception $e) {
-            $arr = ['msg' => '必填项不能为空', $e->getMessage(),'error' => 1];
+            $arr = ['msg' => '必填项不能为空', $e->getMessage(), 'error' => 1];
         }
         return json($arr);
     }
@@ -145,6 +145,57 @@ class Recruit extends Controller
             $arr = ['msg' => '必填项不能为空', 'error' => 1];
         }
         return json($arr);
+    }
+    //供应商全部应募
+    public function recruitsupplylist()
+    {
+        $page = input('page');
+        $number = input('number');
+        $data = input();
+        $project_list = RecruitModel::where('examine = 2')
+            //->whereTime('time',date('Y-m-d'))
+            ->whereTime('time', date('Y-m-d')) // 大于某个时间
+            ->where(function ($query) use ($data) {
+                $search = isset($data['name']) ? $data['name'] : '';
+                if ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                }
+            })
+            ->where(function ($query) use ($data) {
+                $search = isset($data['name']) ? $data['name'] : '';
+                if ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                }
+            })
+            ->where(function ($query) use ($data) {
+                $search = isset($data['timetype']) ? $data['timetype'] : '';
+                if ($search == 4) {
+                    $query->where('time > ' . date('Y-m-d') . ' or time is null');
+                    $query->where('examine', '=', 1);
+                } else if ($search == 5) {
+                    $query->where('time < ' . date('Y-m-d') . ' and examine = 1');
+                }
+            })
+            ->withAttr('category', function ($value) {
+                return json_decode($value, true);
+            })->page($page, $number)->select();
+        $count = count($project_list);
+        $project_list['count'] = $count;
+        $project_list['page'] = $page;
+        $project_list['number'] = $number;
+        $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
+
+        return json($arr);
+    }
+    //供应商申请应募
+    public function applyrecruit()
+    {
+        try {
+            $data = input();
+            $add = db('applyrecruit')->insert($data);
+        } catch (Exception $e) {
+            $arr = ['msg' => '必填项不能为空', 'catch' => $e->getMessage(), 'error' => 1];
+        }
     }
     //http://lzjh.com/Index/recruit/recruitadd?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MzYzNDAzMDUsIm5iZiI6MTYzNTczNTUwNSwiaWF0IjoxNjM1NzM1NTA1LCJ1c2VyaWQiOjMsInR5cGUiOiIxIiwidXNlcm5hbWUiOiIxMzg0MDQ2MzI4NSJ9.zO3RH5roWBRcELR0-HF5YdKHeYdZCflSt4_8Ts-On0s&type=1&name=测试招募名称&company=测试招募单位&time=2021-11-12&pid=4&itype=1&payment=微信&address=辽宁省沈阳市&qualifications=服务资质&remarks=补充说明
 }

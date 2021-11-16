@@ -51,7 +51,7 @@ class Inquiry extends Controller
                         $query->where('edate > ' . date('Y-m-d') . ' and examine = 1');
                     }
                 })
-                ->withAttr('category', function ($value) {
+                ->withAttr('detailedlist', function ($value) {
                     return json_decode($value, true);
                 })->page($page,$number)->order('id desc')->select();
             $count=count($project_list);

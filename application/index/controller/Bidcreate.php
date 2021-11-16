@@ -53,7 +53,7 @@ class Bidcreate extends Controller
                         $query->where('time < ' . date('Y-m-d') . ' and examine = 1');
                     }
                 })
-                ->withAttr('category', function ($value) {
+                ->withAttr('mlist', function ($value) {
                     return json_decode($value, true);
                 })->page($page, $number)->select();
                 $count=count($project_list);
