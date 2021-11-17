@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2021-11-16 22:00:33
+-- 生成日期： 2021-11-17 16:28:54
 -- 服务器版本： 5.7.26
 -- PHP 版本： 7.3.4
 
@@ -45,7 +45,9 @@ CREATE TABLE `lzjh_applyrecruit` (
 --
 
 INSERT INTO `lzjh_applyrecruit` (`id`, `recruitid`, `supplyid`, `cname`, `name`, `tel`, `address`, `type`, `state`) VALUES
-(1, 4, 1, '测试供应商公司名称', '联系人', '13888888888', '辽宁省沈阳市', '测试品类', 1);
+(1, 4, 1, '测试供应商公司名称', '联系人', '13888888888', '辽宁省沈阳市', '测试品类', 1),
+(2, 4, 2, '测试供应商公司名称', '联系人', '13888888888', '辽宁省沈阳市', '测试品类', 1),
+(3, 4, 1, '测试供应商公司名称', '联系人', '13888888888', '辽宁省沈阳市', '测试品类', 2);
 
 -- --------------------------------------------------------
 
@@ -167,6 +169,18 @@ CREATE TABLE `lzjh_instock` (
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `lzjh_offer`
+--
+
+CREATE TABLE `lzjh_offer` (
+  `id` int(11) NOT NULL,
+  `iid` int(11) NOT NULL COMMENT '询价列表id',
+  `supplyid` int(11) NOT NULL COMMENT '供应商id'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='报价表';
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `lzjh_project`
 --
 
@@ -211,6 +225,7 @@ CREATE TABLE `lzjh_recruit` (
   `type` int(1) NOT NULL COMMENT '招募类型1建筑材料2专业分包3设备租赁4劳务分包',
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '招募名称',
   `company` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '发布单位',
+  `stime` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '发布时间',
   `time` date DEFAULT '9999-12-31' COMMENT '截止时间，传空就是长期招募',
   `pid` int(11) NOT NULL COMMENT '项目ID',
   `category` json NOT NULL COMMENT '招募品类，为json字段',
@@ -229,11 +244,11 @@ CREATE TABLE `lzjh_recruit` (
 -- 转存表中的数据 `lzjh_recruit`
 --
 
-INSERT INTO `lzjh_recruit` (`id`, `type`, `name`, `company`, `time`, `pid`, `category`, `itype`, `payment`, `mtype`, `address`, `qualifications`, `remarks`, `enclosure`, `examine`, `userid`) VALUES
-(1, 1, '测试招募名称', '测试招募单位', '9999-12-30', 4, '[{\"nun\": 1, \"name\": \"品类名称1\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称2\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称3\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}]', 1, '微信', '[2, 4, \"其他\"]', '辽宁省沈阳市', '服务资质', '补充说明', NULL, 1, 3),
-(2, 1, '测试招募名称', '测试招募单位', '9999-12-31', 4, '[{\"nun\": 1, \"name\": \"品类名称1\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称2\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称3\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}]', 1, '微信', '[2, 4, \"其他\"]', '辽宁省沈阳市', '服务资质', '补充说明', NULL, 2, 3),
-(3, 1, '招募名称', '招募单位', '2021-11-01', 4, '[{\"nun\": 1, \"name\": \"品类名称1\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称2\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称3\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}]', 1, '微信', '[2, 4, \"其他\"]', '辽宁省沈阳市', '服务资质', '补充说明', NULL, 2, 3),
-(4, 1, '测试招募名称', '测试招募单位', '2022-11-20', 4, '[{\"nun\": 1, \"name\": \"品类名称1\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称2\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称3\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}]', 1, '微信', '[2, 4, \"其他\"]', '辽宁省沈阳市', '服务资质', '补充说明', NULL, 2, 3);
+INSERT INTO `lzjh_recruit` (`id`, `type`, `name`, `company`, `stime`, `time`, `pid`, `category`, `itype`, `payment`, `mtype`, `address`, `qualifications`, `remarks`, `enclosure`, `examine`, `userid`) VALUES
+(1, 1, '测试招募名称', '测试招募单位', '', '9999-12-30', 4, '[{\"nun\": 1, \"name\": \"品类名称1\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称2\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称3\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}]', 1, '微信', '[2, 4, \"其他\"]', '辽宁省沈阳市', '服务资质', '补充说明', NULL, 1, 3),
+(2, 1, '测试招募名称', '测试招募单位', '', '9999-12-31', 4, '[{\"nun\": 1, \"name\": \"品类名称1\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称2\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称3\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}]', 1, '微信', '[2, 4, \"其他\"]', '辽宁省沈阳市', '服务资质', '补充说明', NULL, 2, 3),
+(3, 1, '招募名称', '招募单位', '', '2021-11-01', 4, '[{\"nun\": 1, \"name\": \"品类名称1\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称2\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称3\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}]', 1, '微信', '[2, 4, \"其他\"]', '辽宁省沈阳市', '服务资质', '补充说明', NULL, 2, 3),
+(4, 1, '测试招募名称', '测试招募单位', '', '2022-11-20', 4, '[{\"nun\": 1, \"name\": \"品类名称1\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称2\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}, {\"nun\": 1, \"name\": \"品类名称3\", \"unit\": 5, \"money\": \"200\", \"remake\": \"需求描述\"}]', 1, '微信', '[2, 4, \"其他\"]', '辽宁省沈阳市', '服务资质', '补充说明', NULL, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -292,6 +307,12 @@ ALTER TABLE `lzjh_instock`
   ADD PRIMARY KEY (`id`);
 
 --
+-- 表的索引 `lzjh_offer`
+--
+ALTER TABLE `lzjh_offer`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- 表的索引 `lzjh_project`
 --
 ALTER TABLE `lzjh_project`
@@ -317,7 +338,7 @@ ALTER TABLE `lzjh_user`
 -- 使用表AUTO_INCREMENT `lzjh_applyrecruit`
 --
 ALTER TABLE `lzjh_applyrecruit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用表AUTO_INCREMENT `lzjh_bidcreate`
@@ -335,6 +356,12 @@ ALTER TABLE `lzjh_inquiry`
 -- 使用表AUTO_INCREMENT `lzjh_instock`
 --
 ALTER TABLE `lzjh_instock`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- 使用表AUTO_INCREMENT `lzjh_offer`
+--
+ALTER TABLE `lzjh_offer`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
