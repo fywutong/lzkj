@@ -8,6 +8,6 @@ class Recruit extends Model
     {
         $query->where('userid', '=', $value);
     }
-  
+    
 
 }

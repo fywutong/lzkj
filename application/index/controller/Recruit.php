@@ -86,6 +86,7 @@ class Recruit extends Controller
                 $category = input('category');
                 $data['category'] = json_decode($category, true);
                 $data['userid'] = $userid;
+                $data['stime'] = date('Y-m-d');
                 $save = $project->save($data);
                 if ($save) {
                     $arr = ['msg' => '添加成功', 'error' => 0];
@@ -162,12 +163,6 @@ class Recruit extends Controller
                 }
             })
             ->where(function ($query) use ($data) {
-                $search = isset($data['name']) ? $data['name'] : '';
-                if ($search) {
-                    $query->where('name', 'like', '%' . $search . '%');
-                }
-            })
-            ->where(function ($query) use ($data) {
                 $search = isset($data['timetype']) ? $data['timetype'] : '';
                 if ($search == 4) {
                     $query->where('time > ' . date('Y-m-d') . ' or time is null');
@@ -184,7 +179,35 @@ class Recruit extends Controller
         $project_list['page'] = $page;
         $project_list['number'] = $number;
         $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
-
+        return json($arr);
+    }
+    //应募管理顶部选项卡
+    public function searchrecruit()
+    {
+        $data = input();
+        $token = input('token');
+        $page = input('page');
+        $number = input('number');
+        $returntoken = checkToken($token);
+        if (empty($token)) {
+            $arr = ['msg' => 'token不能为空', 'error' => 1];
+        } else if ($returntoken['code'] == 200) {
+            $userid = $returntoken['data']['userid'];
+            $search_select = Applyrecruit::withSearch(['supplyid'], ['supplyid' => $userid])
+            ->where(function ($query) use ($data) {
+                $search = isset($data['state']) ? $data['state'] : '';
+                if ($search) {
+                    $query->where('state', '=', $search);
+                }
+            })
+            ->append(['rname','rcompany','rpname','rstime','retime'])
+            ->page($page, $number)->select();
+            $count = count($search_select);
+            $search_select['count'] = $count;
+            $search_select['page'] = $page;
+            $search_select['number'] = $number;
+            $arr = ['msg' => '成功', 'data' => $search_select, 'error' => 0];
+        }
         return json($arr);
     }
     //供应商申请应募
@@ -197,7 +220,7 @@ class Recruit extends Controller
             $data = input();
             if (empty($token)) {
                 $arr = ['msg' => 'token不能为空', 'error' => 1];
-            }else if ($returntoken['code'] == 200) {
+            } else if ($returntoken['code'] == 200) {
                 //判断是否为供应商
                 $return = gongyinglogin($returntoken['data']['type']);
                 if ($return['error'] == 1) {
@@ -214,6 +237,18 @@ class Recruit extends Controller
             }
         } catch (Exception $e) {
             $arr = ['msg' => '必填项不能为空', 'catch' => $e->getMessage(), 'error' => 1];
+        }
+        return json($arr);
+    }
+    //查看应募
+    public function applyrecruitcheck()
+    {
+        try {
+            $id = input('id');
+            $project_list = Applyrecruit::get($id)->append(['rname','rcompany','rpname','rstime','retime']);
+            $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
+        } catch (Exception $e) {
+            $arr = ['msg' => '必填项不能为空', $e->getMessage(), 'error' => 1];
         }
         return json($arr);
     }
