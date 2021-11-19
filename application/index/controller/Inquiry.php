@@ -3,6 +3,7 @@
 namespace app\index\controller;
 
 use app\model\Inquiry as ModelInquiry;
+use app\model\Offer;
 use Exception;
 use think\Controller;
 
@@ -24,7 +25,7 @@ class Inquiry extends Controller
         //print_r($action);die();
         if (empty($token)) {
             $arr = ['msg' => 'token不能为空', 'error' => 1];
-        } else if ($returntoken['code'] == 200) {
+        } elseif ($returntoken['code'] == 200) {
             $return = judgelogin($returntoken['data']['type']);
             if ($return['error'] == 1) {
                 return json($return);
@@ -47,17 +48,17 @@ class Inquiry extends Controller
                     $search = isset($data['timetype']) ? $data['timetype'] : '';
                     if ($search == 4) {
                         $query->where('edate <' . date('Y-m-d') . ' and examine = 1');
-                    } else if ($search == 5) {
+                    } elseif ($search == 5) {
                         $query->where('edate > ' . date('Y-m-d') . ' and examine = 1');
                     }
                 })
                 ->withAttr('detailedlist', function ($value) {
                     return json_decode($value, true);
-                })->page($page,$number)->order('id desc')->select();
-            $count=count($project_list);
-            $project_list['count']=$count;
-            $project_list['page']=$page;
-            $project_list['number']=$number;
+                })->page($page, $number)->order('id desc')->select();
+            $count = count($project_list);
+            $project_list['count'] = $count;
+            $project_list['page'] = $page;
+            $project_list['number'] = $number;
             $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
         } else {
             $arr = ['msg' => $returntoken['msg'], 'error' => 1];
@@ -75,7 +76,7 @@ class Inquiry extends Controller
             $data = input();
             if (empty($token)) {
                 $arr = ['msg' => 'token不能为空', 'error' => 1];
-            } else if ($returntoken['code'] == 200) {
+            } elseif ($returntoken['code'] == 200) {
                 $return = judgelogin($returntoken['data']['type']);
                 if ($return['error'] == 1) {
                     return json($return);
@@ -122,18 +123,18 @@ class Inquiry extends Controller
                 $arr = ['msg' => $returntoken['msg'], 'error' => 1];
             }
         } catch (Exception $e) {
-            $arr = ['msg' => '必填项不能为空', 'xinxi'=>$e->getMessage(),'error' => 1];
+            $arr = ['msg' => '必填项不能为空', 'xinxi' => $e->getMessage(), 'error' => 1];
         }
         return json($arr);
     }
     public function inquirycheck()
     {
         try {
-          $id=input('id');
-          $project_list = ModelInquiry::get($id);
-          $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
+            $id = input('id');
+            $project_list = ModelInquiry::get($id);
+            $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
         } catch (Exception $e) {
-            $arr = ['msg' => '必填项不能为空', $e->getMessage(),'error' => 1];
+            $arr = ['msg' => '必填项不能为空', $e->getMessage(), 'error' => 1];
         }
         return json($arr);
     }
@@ -146,7 +147,7 @@ class Inquiry extends Controller
             $data = input();
             if (empty($token)) {
                 $arr = ['msg' => 'token不能为空', 'error' => 1];
-            } else if ($returntoken['code'] == 200) {
+            } elseif ($returntoken['code'] == 200) {
                 $return = judgelogin($returntoken['data']['type']);
                 if ($return['error'] == 1) {
                     return json($return);
@@ -169,5 +170,100 @@ class Inquiry extends Controller
         }
         return json($arr);
     }
-    //http://lzjh.com/Index/recruit/recruitadd?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MzYzNDAzMDUsIm5iZiI6MTYzNTczNTUwNSwiaWF0IjoxNjM1NzM1NTA1LCJ1c2VyaWQiOjMsInR5cGUiOiIxIiwidXNlcm5hbWUiOiIxMzg0MDQ2MzI4NSJ9.zO3RH5roWBRcELR0-HF5YdKHeYdZCflSt4_8Ts-On0s&type=1&name=测试招募名称&company=测试招募单位&time=2021-11-12&pid=4&itype=1&payment=微信&address=辽宁省沈阳市&qualifications=服务资质&remarks=补充说明
+    //全部询价
+    public function offerlist()
+    {
+        $page = input('page');
+        $number = input('number');
+        $data = input();
+        $project_list = ModelInquiry::withAttr('detailedlist', function ($value) {
+            return json_decode($value, true);
+        })->where(function ($query) use ($data) {
+            $search = isset($data['iname']) ? $data['iname'] : '';
+            if ($search) {
+                $query->where('iname', 'like', '%' . $search . '%');
+            }
+        })->where('examine = 2')->page($page, $number)->order('id desc')->select();
+        $count = count($project_list);
+        $project_list['count'] = $count;
+        $project_list['page'] = $page;
+        $project_list['number'] = $number;
+        $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
+        return json($arr);
+    }
+    //开始报价
+    public function offeradd()
+    {
+        try {
+            $project = new Offer();
+            $token = input('token');
+            $returntoken = checkToken($token);
+            $data = input();
+            if (empty($token)) {
+                $arr = ['msg' => 'token不能为空', 'error' => 1];
+            } elseif ($returntoken['code'] == 200) {
+                $return = gongyinglogin($returntoken['data']['type']);
+                if ($return['error'] == 1) {
+                    return json($return);
+                }
+                $userid = $returntoken['data']['userid'];
+                $data['supplyid'] = $userid;
+                //print_r($data);die();
+                $save = $project->save($data);
+                if ($save) {
+                    $arr = ['msg' => '添加成功', 'error' => 0];
+                } else {
+                    $arr = ['msg' => '添加失败，异常错误', 'error' => 1];
+                }
+            } else {
+                $arr = ['msg' => $returntoken['msg'], 'error' => 1];
+            }
+        } catch (Exception $e) {
+            $arr = ['msg' => '必填项不能为空', 'xinxi' => $e->getMessage(), 'error' => 1];
+        }
+        return json($arr);
+    }
+    //所有询价
+    public function offerall()
+    {
+        $token = input('token');
+        $page = input('page');
+        $number = input('number');
+        $returntoken = checkToken($token);
+        $data = input();
+        //print_r($action);die();
+        if (empty($token)) {
+            $arr = ['msg' => 'token不能为空', 'error' => 1];
+        } elseif ($returntoken['code'] == 200) {
+            $return = gongyinglogin($returntoken['data']['type']);
+            if ($return['error'] == 1) {
+                return json($return);
+            }
+            $userid = $returntoken['data']['userid'];
+            $project_list = Offer::withSearch(['supplyid'], ['supplyid' => $userid])
+            ->append(['iname','icompany','ipname','istarttime','iendtime'])
+               ->page($page, $number)->order('id desc')->select();
+            $count = count($project_list);
+            $project_list['count'] = $count;
+            $project_list['page'] = $page;
+            $project_list['number'] = $number;
+            $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
+        } else {
+            $arr = ['msg' => $returntoken['msg'], 'error' => 1];
+        }
+        return json($arr);
+    }
+     //查看报价
+     public function offercheck()
+     {
+         try {
+             $id = input('id');
+             $project_list = Offer::get($id);
+             $arr = ['msg' => '成功', 'data' => $project_list, 'error' => 0];
+         } catch (Exception $e) {
+             $arr = ['msg' => '必填项不能为空', $e->getMessage(), 'error' => 1];
+         }
+         return json($arr);
+     }
+    //http://lzjh.com/Index/Inquiry/offeradd?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Mzc2Njk2MzksIm5iZiI6MTYzNzA2NDgzOSwiaWF0IjoxNjM3MDY0ODM5LCJ1c2VyaWQiOjEsInR5cGUiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiJ9.k8SJUyovJs-qY6X1OX-_8yLmWY4HmvAUQMIqA1jpYHs&iid=1&tax=17&material=/public/aaa.txt&mprice=100000&name=王先生&tel=13888888888&remark=备注&enclosure=/public/bbb.txt
 }

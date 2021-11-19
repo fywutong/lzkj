@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2021-11-17 16:28:54
+-- 生成日期： 2021-11-19 16:39:13
 -- 服务器版本： 5.7.26
 -- PHP 版本： 7.3.4
 
@@ -90,7 +90,7 @@ CREATE TABLE `lzjh_bidcreate` (
 --
 
 INSERT INTO `lzjh_bidcreate` (`id`, `btype`, `pid`, `bname`, `bmode`, `sid`, `iid`, `rname`, `phone`, `mtype`, `mlist`, `requirement`, `endtime`, `calibrationtime`, `approachtime`, `songbiao`, `songhuo`, `address`, `otype`, `floatprice`, `payment`, `invoice`, `bondtype`, `bondprice`, `enclosure`, `userid`, `examine`) VALUES
-(1, 1, 1, '1', 1, '1', 1, '1', '1', '1', '1', '1', '1', '1', '1', 1, 1, '1', 1, '1', '1', 1, 1, '1', '1', 3, 1);
+(1, 1, 1, '1', 1, '1', 1, '1', '1', '1', '1', '1', '1', '1', '1', 1, 1, '1', 1, '1', '1', 1, 1, '1', '1', 3, 2);
 
 -- --------------------------------------------------------
 
@@ -143,7 +143,7 @@ CREATE TABLE `lzjh_inquiry` (
 --
 
 INSERT INTO `lzjh_inquiry` (`id`, `type`, `iname`, `pname`, `cname`, `tel`, `materialtype`, `mode`, `detailedlist`, `ptype`, `mdate`, `edate`, `starttime`, `endtime`, `otype`, `oprice`, `orequirement`, `payment`, `address`, `itype`, `qualifications`, `remarks`, `enclosure`, `examine`, `userid`) VALUES
-(1, 1, '测试询价', '测试项目', '李先生', '13888888888', '测试物资类型', 1, '[{\"name\":\"\\u6d4b\\u8bd5\\u7269\\u8d44\\u540d\\u79f0\",\"model\":\"\\u6d4b\\u8bd5\\u578b\\u53f7\",\"parameter\":\"\\u53c2\\u6570\\u6307\\u6807\",\"brand\":\"\\u54c1\\u724c\",\"address\":\"\\u4ea7\\u5730\",\"unit\":\"\\u5355\\u4f4d\",\"num\":\"5\",\"remarks\":\"\\u5907\\u6ce8\"},{\"name\":\"\\u6d4b\\u8bd5\\u7269\\u8d44\\u540d\\u79f0\",\"model\":\"\\u6d4b\\u8bd5\\u578b\\u53f7\",\"parameter\":\"\\u53c2\\u6570\\u6307\\u6807\",\"brand\":\"\\u54c1\\u724c\",\"address\":\"\\u4ea7\\u5730\",\"unit\":\"\\u5355\\u4f4d\",\"num\":\"5\",\"remarks\":\"\\u5907\\u6ce8\"},{\"name\":\"\\u6d4b\\u8bd5\\u7269\\u8d44\\u540d\\u79f0\",\"model\":\"\\u6d4b\\u8bd5\\u578b\\u53f7\",\"parameter\":\"\\u53c2\\u6570\\u6307\\u6807\",\"brand\":\"\\u54c1\\u724c\",\"address\":\"\\u4ea7\\u5730\",\"unit\":\"\\u5355\\u4f4d\",\"num\":\"5\",\"remarks\":\"\\u5907\\u6ce8\"}]', 1, '2021-11-05', '2021-12-08', '2021-11-05', '2021-12-08', 1, NULL, '1', '微信', '辽宁省沈阳市大东区', 1, NULL, NULL, NULL, 1, 3);
+(1, 1, '测试询价', '测试项目', '李先生', '13888888888', '测试物资类型', 1, '[{\"name\":\"\\u6d4b\\u8bd5\\u7269\\u8d44\\u540d\\u79f0\",\"model\":\"\\u6d4b\\u8bd5\\u578b\\u53f7\",\"parameter\":\"\\u53c2\\u6570\\u6307\\u6807\",\"brand\":\"\\u54c1\\u724c\",\"address\":\"\\u4ea7\\u5730\",\"unit\":\"\\u5355\\u4f4d\",\"num\":\"5\",\"remarks\":\"\\u5907\\u6ce8\"},{\"name\":\"\\u6d4b\\u8bd5\\u7269\\u8d44\\u540d\\u79f0\",\"model\":\"\\u6d4b\\u8bd5\\u578b\\u53f7\",\"parameter\":\"\\u53c2\\u6570\\u6307\\u6807\",\"brand\":\"\\u54c1\\u724c\",\"address\":\"\\u4ea7\\u5730\",\"unit\":\"\\u5355\\u4f4d\",\"num\":\"5\",\"remarks\":\"\\u5907\\u6ce8\"},{\"name\":\"\\u6d4b\\u8bd5\\u7269\\u8d44\\u540d\\u79f0\",\"model\":\"\\u6d4b\\u8bd5\\u578b\\u53f7\",\"parameter\":\"\\u53c2\\u6570\\u6307\\u6807\",\"brand\":\"\\u54c1\\u724c\",\"address\":\"\\u4ea7\\u5730\",\"unit\":\"\\u5355\\u4f4d\",\"num\":\"5\",\"remarks\":\"\\u5907\\u6ce8\"}]', 1, '2021-11-05', '2021-12-08', '2021-11-05', '2021-12-08', 1, NULL, '1', '微信', '辽宁省沈阳市大东区', 1, NULL, NULL, NULL, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -175,8 +175,22 @@ CREATE TABLE `lzjh_instock` (
 CREATE TABLE `lzjh_offer` (
   `id` int(11) NOT NULL,
   `iid` int(11) NOT NULL COMMENT '询价列表id',
-  `supplyid` int(11) NOT NULL COMMENT '供应商id'
+  `supplyid` int(11) NOT NULL COMMENT '供应商id',
+  `tax` varchar(10) COLLATE utf8_unicode_ci NOT NULL COMMENT '税率',
+  `material` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '物资清单路径',
+  `mprice` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '实际总报价',
+  `name` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT '业务联系人',
+  `tel` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '联系电话',
+  `remark` text COLLATE utf8_unicode_ci NOT NULL COMMENT '备注',
+  `enclosure` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '附件地址'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='报价表';
+
+--
+-- 转存表中的数据 `lzjh_offer`
+--
+
+INSERT INTO `lzjh_offer` (`id`, `iid`, `supplyid`, `tax`, `material`, `mprice`, `name`, `tel`, `remark`, `enclosure`) VALUES
+(1, 1, 1, '17', '/public/aaa.txt', '100000', '王先生', '13888888888', '备注', '/public/bbb.txt');
 
 -- --------------------------------------------------------
 
@@ -253,6 +267,35 @@ INSERT INTO `lzjh_recruit` (`id`, `type`, `name`, `company`, `stime`, `time`, `p
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `lzjh_supplybid`
+--
+
+CREATE TABLE `lzjh_supplybid` (
+  `id` int(11) NOT NULL,
+  `bid` int(11) NOT NULL COMMENT '标书id',
+  `sid` int(11) NOT NULL COMMENT '供应商id',
+  `iid` int(11) NOT NULL COMMENT '开票信息id',
+  `invoice` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT '发票类型',
+  `tax` varchar(10) COLLATE utf8_unicode_ci NOT NULL COMMENT '税率',
+  `freight` int(11) NOT NULL DEFAULT '1' COMMENT '报价是否已含运费 1是含 2是不含',
+  `other` int(11) NOT NULL DEFAULT '1' COMMENT '报价是否含税费和其他费用成本 1是含 2是不含',
+  `pricelist` text COLLATE utf8_unicode_ci NOT NULL COMMENT '报价列表',
+  `enclosure` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '附件地址',
+  `name` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT '业务联系人',
+  `tel` varchar(20) COLLATE utf8_unicode_ci NOT NULL COMMENT '联系人电话',
+  `remake` text COLLATE utf8_unicode_ci COMMENT '备注'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='供应商投标';
+
+--
+-- 转存表中的数据 `lzjh_supplybid`
+--
+
+INSERT INTO `lzjh_supplybid` (`id`, `bid`, `sid`, `iid`, `invoice`, `tax`, `freight`, `other`, `pricelist`, `enclosure`, `name`, `tel`, `remake`) VALUES
+(1, 1, 1, 1, '普通发票', '2', 1, 1, '[{\"name\":\"\\u6d4b\\u8bd5\\u7269\\u8d44\\u540d\\u79f0\",\"model\":\"\\u6d4b\\u8bd5\\u578b\\u53f7\",\"parameter\":\"\\u53c2\\u6570\\u6307\\u6807\",\"brand\":\"\\u54c1\\u724c\",\"address\":\"\\u4ea7\\u5730\",\"unit\":\"\\u5355\\u4f4d\",\"num\":\"5\",\"shuiprice\":\"10\",\"price\":\"8\",\"taxprice\":\"2\",\"remarks\":\"\\u5907\\u6ce8\"},{\"name\":\"\\u6d4b\\u8bd5\\u7269\\u8d44\\u540d\\u79f0\",\"model\":\"\\u6d4b\\u8bd5\\u578b\\u53f7\",\"parameter\":\"\\u53c2\\u6570\\u6307\\u6807\",\"brand\":\"\\u54c1\\u724c\",\"address\":\"\\u4ea7\\u5730\",\"unit\":\"\\u5355\\u4f4d\",\"num\":\"5\",\"shuiprice\":\"10\",\"price\":\"8\",\"taxprice\":\"2\",\"remarks\":\"\\u5907\\u6ce8\"}]', NULL, '李先生', '13888888888', '12312312313');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `lzjh_user`
 --
 
@@ -325,6 +368,12 @@ ALTER TABLE `lzjh_recruit`
   ADD PRIMARY KEY (`id`);
 
 --
+-- 表的索引 `lzjh_supplybid`
+--
+ALTER TABLE `lzjh_supplybid`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- 表的索引 `lzjh_user`
 --
 ALTER TABLE `lzjh_user`
@@ -362,7 +411,7 @@ ALTER TABLE `lzjh_instock`
 -- 使用表AUTO_INCREMENT `lzjh_offer`
 --
 ALTER TABLE `lzjh_offer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `lzjh_project`
@@ -375,6 +424,12 @@ ALTER TABLE `lzjh_project`
 --
 ALTER TABLE `lzjh_recruit`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- 使用表AUTO_INCREMENT `lzjh_supplybid`
+--
+ALTER TABLE `lzjh_supplybid`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `lzjh_user`
