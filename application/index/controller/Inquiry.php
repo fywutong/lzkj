@@ -6,7 +6,7 @@ use app\model\Inquiry as ModelInquiry;
 use app\model\Offer;
 use Exception;
 use think\Controller;
-
+header("Access-Control-Allow-Origin: *");
 class Inquiry extends Controller
 {
     //采购商项目列表
@@ -265,5 +265,6 @@ class Inquiry extends Controller
          }
          return json($arr);
      }
+     
     //http://lzjh.com/Index/Inquiry/offeradd?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Mzc2Njk2MzksIm5iZiI6MTYzNzA2NDgzOSwiaWF0IjoxNjM3MDY0ODM5LCJ1c2VyaWQiOjEsInR5cGUiOiIxIiwidXNlcm5hbWUiOiJhZG1pbiJ9.k8SJUyovJs-qY6X1OX-_8yLmWY4HmvAUQMIqA1jpYHs&iid=1&tax=17&material=/public/aaa.txt&mprice=100000&name=王先生&tel=13888888888&remark=备注&enclosure=/public/bbb.txt
 }

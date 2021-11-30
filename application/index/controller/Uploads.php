@@ -5,7 +5,7 @@ namespace app\index\controller;
 use app\model\Project as ProjectModel;
 use app\model\User;
 use think\Controller;
-
+header("Access-Control-Allow-Origin: *");
 class Uploads extends Controller
 {
     public function _empty()

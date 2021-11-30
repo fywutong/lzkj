@@ -1,14 +1,14 @@
 <?php
-
 namespace app\index\controller;
 
 use app\model\Project as ProjectModel;
 use app\model\User;
 use Exception;
 use think\Controller;
-
+header("Access-Control-Allow-Origin: *");
 class Project extends Controller
 {
+    
     public function _empty()
     {
         $arr = ['msg' => '错误的方法', 'error' => 1];
@@ -76,6 +76,8 @@ class Project extends Controller
             }
             $userid = $returntoken['data']['userid'];
             $data['userid'] = $userid;
+            $data['ddh']=time().rand('1111,9999');
+            $data['time'] = date('Y-m-d');
             $save = $project->save($data);
             if ($save) {
                 $arr = ['msg' => '添加成功', 'error' => 0];

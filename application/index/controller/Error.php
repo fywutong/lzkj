@@ -4,7 +4,7 @@ namespace app\index\controller;
 
 
 use think\Controller;
-
+header("Access-Control-Allow-Origin: *");
 class Error
 {
   public function _empty()

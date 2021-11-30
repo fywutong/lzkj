@@ -5,7 +5,7 @@ namespace app\index\controller;
 use app\model\Project;
 use app\model\User;
 use think\Controller;
-
+header("Access-Control-Allow-Origin: *");
 class Index extends Controller
 {
     public function _empty()

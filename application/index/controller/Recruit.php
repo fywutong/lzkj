@@ -6,7 +6,7 @@ use app\model\Recruit as RecruitModel;
 use app\model\Applyrecruit;
 use Exception;
 use think\Controller;
-
+header("Access-Control-Allow-Origin: *");
 class Recruit extends Controller
 {
     //采购商项目列表
@@ -48,9 +48,9 @@ class Recruit extends Controller
                     $search = isset($data['timetype']) ? $data['timetype'] : '';
                     if ($search == 4) {
                         $query->where('time >' . date('Y-m-d') . ' or time is null');
-                        $query->where('examine', '=', 1);
+                        $query->where('examine', '=', 2);
                     } else if ($search == 5) {
-                        $query->where('time < ' . date('Y-m-d') . ' and examine = 1');
+                        $query->where('time < ' . date('Y-m-d') . ' and examine = 2');
                     }
                 })
                 ->withAttr('category', function ($value) {
